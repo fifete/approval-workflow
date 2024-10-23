@@ -5,6 +5,7 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
+import Credentials from "next-auth/providers/credentials";
 import DiscordProvider from "next-auth/providers/discord";
 
 import { env } from "~/env";
@@ -36,22 +37,49 @@ declare module "next-auth" {
  *
  * @see https://next-auth.js.org/configuration/options
  */
+interface JwtCallbackParams {
+  token: any;
+  user?: any;
+  account?: any;
+  profile?: any;
+  isNewUser?: boolean;
+}
+
+interface SessionCallbackParams {
+  session: any;
+  user: any;
+  token: any;
+}
+
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    jwt: async ({ token, user }: JwtCallbackParams) => {
+      console.log("jwt callback", { token, user });
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    session: ({ session, user, token }: SessionCallbackParams) => {
+      console.log("session callback", { session, user, token });
+      session.user = user;
+      return session;
+    },
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
+    Credentials({
+      name: "Credentials",
+      credentials: {
+        username: { label: "Username", type: "text", placeholder: "john" },
+        password: { label: "Password", type: "password", placeholder: "password" },
+      },
+      async authorize(credentials, req) {
+        // Add custom logic here to authenticate the user
+        // You can use the `req` object to access additional properties, such as the request headers.
+        return await { id: "1", name: "John Doe", email: "john@gmail.com" };
+      }
+    })
     /**
      * ...add more providers here.
      *
@@ -62,6 +90,10 @@ export const authOptions: NextAuthOptions = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
+  session: {
+    strategy: "jwt",
+  },
+  secret: env.NEXTAUTH_SECRET,
 };
 
 /**
