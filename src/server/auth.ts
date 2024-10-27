@@ -6,7 +6,6 @@ import {
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
 import Credentials from "next-auth/providers/credentials";
-import DiscordProvider from "next-auth/providers/discord";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
@@ -54,17 +53,16 @@ interface SessionCallbackParams {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     jwt: async ({ token, user }: JwtCallbackParams) => {
-      console.log("jwt callback", { token, user });
-      if (user) {
+      if (!!user) {
         token.id = user.id;
       }
       return token;
     },
-    session: ({ session, user, token }: SessionCallbackParams) => {
-      console.log("session callback", { session, user, token });
-      session.user = user;
+    session: ({ session, token }: SessionCallbackParams) => {
+      session.user = { id: token.id, ...session.user };
+
       return session;
-    },
+    },   
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
@@ -75,9 +73,24 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password", placeholder: "password" },
       },
       async authorize(credentials, req) {
-        // Add custom logic here to authenticate the user
-        // You can use the `req` object to access additional properties, such as the request headers.
-        return await { id: "1", name: "John Doe", email: "john@gmail.com" };
+        if (!credentials) {
+          return null;
+        }
+
+        const user = await db.user.findUnique({
+          where: {
+            name: credentials.username,
+            password: credentials.password,
+          },
+        })
+
+        //TODO: ENCRYPT PASSWORD
+        // if (!user || !(await compare(password, user.password))) {
+        if (!user) {
+          return null;
+        }
+
+        return user;
       }
     })
     /**
