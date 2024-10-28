@@ -62,7 +62,10 @@ export const authOptions: NextAuthOptions = {
       session.user = { id: token.id, ...session.user };
 
       return session;
-    },   
+    },
+    async redirect({url, baseUrl}) {
+      return baseUrl + "/home";
+    },
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
