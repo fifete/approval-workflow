@@ -54,6 +54,7 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+//TODO: id has to be autoincremental and integer
 model User {
     id            String    @id @default(cuid())
     name          String?   @unique
@@ -73,3 +74,20 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+
+// model Request {
+//   id          Int      @id @default(autoincrement())
+//   effectDate  DateTime
+//   description String
+//   minutes     Int
+//   approverId  Int
+//   status      Int
+//   createdAt   DateTime @default(now())
+//   createdById Int
+//   updatedAt   DateTime @updatedAt
+//   updatedById Int
+
+//   approver    User     @relation(fields: [approverId], references: [id])
+//   creator   User     @relation(fields: [createdById], references: [id])
+//   updater   User     @relation(fields: [updatedById], references: [id])
+// }
