@@ -1,10 +1,13 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import {
   getServerSession,
+  Session,
+  User,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
+import { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 
 import { env } from "~/env";
@@ -37,17 +40,13 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 interface JwtCallbackParams {
-  token: any;
-  user?: any;
-  account?: any;
-  profile?: any;
-  isNewUser?: boolean;
+  token: JWT;
+  user?: User;
 }
 
 interface SessionCallbackParams {
-  session: any;
-  user: any;
-  token: any;
+  session: Session;
+  token: JWT;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -59,7 +58,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     session: ({ session, token }: SessionCallbackParams) => {
-      session.user = { id: token.id, ...session.user };
+      session.user = { ...session.user, id: token.id as string };
 
       return session;
     },
