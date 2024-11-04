@@ -54,7 +54,6 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-//TODO: id has to be autoincremental and integer
 model User {
     id            String    @id @default(cuid())
     name          String?   @unique
@@ -65,6 +64,10 @@ model User {
     sessions      Session[]
     posts         Post[]
     password String
+
+    Request Request[] @relation("approverRelation")
+    createdRequests Request[] @relation("creatorRelation")
+    updatedRequests Request[] @relation("updaterRelation")
 }
 
 model VerificationToken {
@@ -75,19 +78,18 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-// model Request {
-//   id          Int      @id @default(autoincrement())
-//   effectDate  DateTime
-//   description String
-//   minutes     Int
-//   approverId  Int
-//   status      Int
-//   createdAt   DateTime @default(now())
-//   createdById Int
-//   updatedAt   DateTime @updatedAt
-//   updatedById Int
-
-//   approver    User     @relation(fields: [approverId], references: [id])
-//   creator   User     @relation(fields: [createdById], references: [id])
-//   updater   User     @relation(fields: [updatedById], references: [id])
-// }
+model Request {
+  id          Int      @id @default(autoincrement())
+  effectDate  DateTime
+  description String
+  minutes     Int
+  approverId  String
+  status      Int
+  createdAt   DateTime @default(now())
+  createdById String
+  updatedAt   DateTime? @updatedAt
+  updatedById String?
+  approver    User     @relation("approverRelation", fields: [approverId], references: [id])
+  creator     User     @relation("creatorRelation", fields: [createdById], references: [id])
+  updater     User?     @relation("updaterRelation", fields: [updatedById], references: [id])
+}
