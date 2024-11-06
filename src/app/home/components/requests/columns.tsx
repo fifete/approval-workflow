@@ -4,18 +4,8 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import { Button } from "~/app/_components/ui/button"
+import { Request } from "~/types"
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Request = {
-  id: number
-  workerName: string
-  effectDate: string
-  description: string
-  minutes: number
-  approver: string
-  status: "pending" | "approved" | "rejected"
-}
 export const columns: ColumnDef<Request>[] = [
     {
       accessorKey: "id",
