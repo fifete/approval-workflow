@@ -18,10 +18,37 @@ import {
 } from "@/app/_components/ui/table";
 import { Button } from "~/app/_components/ui/button";
 import { DataTablePagination } from "./data-table-pagination";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+}
+
+interface ActionMenuProps {
+  approveRequest: (id: number) => void;
+  rejectRequest: (id: number) => void;
+  requestId: number;
+}
+
+export function ActionMenu({ approveRequest, rejectRequest, requestId }: ActionMenuProps) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => approveRequest(requestId)}>Approve</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => rejectRequest(requestId)}>Reject</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
 
 export function DataTable<TData, TValue>({

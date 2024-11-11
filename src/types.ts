@@ -7,9 +7,14 @@ export enum RequestStatus {
 export interface Request {
   id: number;
   workerName: string;
-  effectDate: string;
+  effectDate: Date;
   description: string;
   minutes: number;
   approver: string;
   status: 'pending' | 'approved' | 'rejected';
+}
+
+export interface RequestColumn extends Request {
+  actions: unknown;
+  // actions: AccessorKeyColumnDef<RequestColumn, ReactNode>;
 }

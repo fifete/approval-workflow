@@ -1,12 +1,17 @@
-"use client"
+"use client";
 
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu"
-import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
-import { Button } from "~/app/_components/ui/button"
-import { Request } from "~/types"
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table"
+import { RequestColumn } from "~/types"
+import { ActionMenu } from "./data-table"
 
-export const columns: ColumnDef<Request>[] = [
+interface GetRequestProps {
+  approveRequest: (id: number) => void
+  rejectRequest: (id: number) => void
+}
+
+const columnHelper = createColumnHelper<RequestColumn>()
+
+export const GetRequestColumns = ({ approveRequest, rejectRequest }: GetRequestProps): ColumnDef<RequestColumn>[] => [
     {
       accessorKey: "id",
       header: "ID",
@@ -18,6 +23,10 @@ export const columns: ColumnDef<Request>[] = [
     {
       accessorKey: "effectDate",
       header: "Effect Date",
+      cell: ({ row }) => {
+        const date = new Date(row.original.effectDate);
+        return date.toISOString().split('T')[0];
+      },
     },
     {
       accessorKey: "description",
@@ -35,25 +44,16 @@ export const columns: ColumnDef<Request>[] = [
       accessorKey: "status",
       header: "Status",
     },
-    {
-      id: "actions",
+    columnHelper.accessor("actions", {
+      header: "Acciones",
       cell: ({ row }) => {
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Approve</DropdownMenuItem>
-              <DropdownMenuItem>Reject</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <ActionMenu
+            approveRequest={approveRequest}
+            rejectRequest={rejectRequest}
+            requestId={row.original.id}
+          />
         )
       },
-    }
+    })
   ]
