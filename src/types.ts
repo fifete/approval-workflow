@@ -1,3 +1,6 @@
+import { AccessorKeyColumnDef } from "@tanstack/react-table";
+import { ReactNode } from "react";
+
 export enum RequestStatus {
   Pending = 1,
   Approved = 3,
@@ -19,9 +22,5 @@ export interface Request {
   approver: string;
   approverId: number;
   status: number;
-}
-
-export interface RequestColumn extends Request {
-  actions: unknown;
-  // actions: AccessorKeyColumnDef<RequestColumn, ReactNode>;
+  actions: ReactNode;
 }
