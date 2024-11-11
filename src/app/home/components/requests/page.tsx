@@ -6,7 +6,7 @@ import { GetRequestColumns } from "./columns";
 import { useCallback } from "react";
 
 export default function DemoPage() {
-  const {data, refetch} = api.request.listAll.useQuery();
+  const { data, refetch } = api.request.listAll.useQuery();
   const approveMutation = api.request.approve.useMutation()
   const rejectMutation = api.request.reject.useMutation()
 
@@ -35,8 +35,8 @@ export default function DemoPage() {
     , [rejectMutation, refetch]);
 
   return (
-    <div className="container mx-auto py-10">
-      <DataTable columns={GetRequestColumns({ approveRequest, rejectRequest })} data={data ?? []} />
-    </div>
+      <div className="container mx-auto py-10">
+        <DataTable columns={GetRequestColumns({ approveRequest, rejectRequest })} data={data ?? []} />
+      </div>
   );
 }

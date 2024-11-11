@@ -9,7 +9,6 @@ import {
 import { type Adapter } from "next-auth/adapters";
 import { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
-
 import { env } from "~/env";
 import { db } from "~/server/db";
 
@@ -62,7 +61,12 @@ export const authOptions: NextAuthOptions = {
 
       return session;
     },
-    async redirect({url, baseUrl}) {
+    async redirect({ url, baseUrl }) {
+      if (url.endsWith("/auth/signout")) {
+        return baseUrl + "/api/auth/signin";
+      } else if (url.endsWith("/api/auth/signin")) {
+        return baseUrl + "/home";
+      }
       return baseUrl + "/home";
     },
   },
