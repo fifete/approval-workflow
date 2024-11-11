@@ -34,7 +34,7 @@ export const requestRouter = createTRPCRouter({
         },
       },
       orderBy: {
-        effectDate: 'asc',
+        id: 'asc',
       },
     });
 
