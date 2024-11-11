@@ -11,6 +11,7 @@ export interface Request {
   description: string;
   minutes: number;
   approver: string;
+  approverId: number;
   status: 'pending' | 'approved' | 'rejected';
 }
 

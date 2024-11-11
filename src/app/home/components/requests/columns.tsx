@@ -8,7 +8,6 @@ interface GetRequestProps {
   approveRequest: (id: number) => void
   rejectRequest: (id: number) => void
 }
-
 const columnHelper = createColumnHelper<RequestColumn>()
 
 export const GetRequestColumns = ({ approveRequest, rejectRequest }: GetRequestProps): ColumnDef<RequestColumn>[] => [
@@ -52,6 +51,7 @@ export const GetRequestColumns = ({ approveRequest, rejectRequest }: GetRequestP
             approveRequest={approveRequest}
             rejectRequest={rejectRequest}
             requestId={row.original.id}
+            approverId={row.original.approverId}
           />
         )
       },

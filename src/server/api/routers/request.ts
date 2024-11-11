@@ -28,6 +28,7 @@ export const requestRouter = createTRPCRouter({
         },
         approver: {
           select: {
+            id: true,
             name: true,
           },
         },
@@ -44,6 +45,7 @@ export const requestRouter = createTRPCRouter({
       description: request.description,
       minutes: request.minutes,
       approver: request.approver.name,
+      approverId: Number(request.approver.id),
       status: request.status === RequestStatus.Pending ? 'pending' : request.status === RequestStatus.Approved ? 'approved' : 'rejected',
     })) as Request[];
   }),
@@ -66,6 +68,7 @@ export const requestRouter = createTRPCRouter({
           approver: {
             select: {
               name: true,
+              id: true,
             },
           },
         },
@@ -78,6 +81,7 @@ export const requestRouter = createTRPCRouter({
         description: request.description,
         minutes: request.minutes,
         approver: request.approver.name,
+        approverId: Number(request.approver.id),
         status: 'approved',
       } as Request;
     }),
@@ -101,6 +105,7 @@ export const requestRouter = createTRPCRouter({
           approver: {
             select: {
               name: true,
+              id: true,
             },
           },
         },
@@ -113,7 +118,12 @@ export const requestRouter = createTRPCRouter({
         description: request.description,
         minutes: request.minutes,
         approver: request.approver.name,
+        approverId: Number(request.approver.id),
         status: 'rejected',
       } as Request;
     }),
+
+  getSessionUserId: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.session.user.id;
+  }),
 });
