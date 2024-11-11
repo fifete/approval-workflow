@@ -38,7 +38,7 @@ import {
               <SelectTrigger className="h-8 w-[70px]">
                 <SelectValue placeholder={table.getState().pagination.pageSize} />
               </SelectTrigger>
-              <SelectContent side="top">
+              <SelectContent side="top" style={{ background: 'white', borderRadius: '3px', border: '1px solid #e5e7eb' }}>
                 {[10, 20, 30, 40, 50].map((pageSize) => (
                   <SelectItem key={pageSize} value={`${pageSize}`}>
                     {pageSize}

@@ -63,11 +63,11 @@ function ActionMenuContent({ approveRequest, rejectRequest, requestId, approverI
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => approveRequest(requestId)}>Approve</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => rejectRequest(requestId)}>Reject</DropdownMenuItem>
+      <DropdownMenuContent align="end" style={{ background: 'white', borderRadius: '3px', border: '1px solid #e5e7eb' }}>
+        <DropdownMenuLabel style={{ padding: '6px 12px 6px 8px' }}>Actions</DropdownMenuLabel>
+        <DropdownMenuSeparator style={{ border: '1px solid #e5e7eb' }} />
+        <DropdownMenuItem style={{ padding: '4px 12px 4px 8px', cursor: 'pointer' }} onClick={() => approveRequest(requestId)}>Approve</DropdownMenuItem>
+        <DropdownMenuItem style={{ padding: '4px 12px 4px 8px', cursor: 'pointer' }} onClick={() => rejectRequest(requestId)}>Reject</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
