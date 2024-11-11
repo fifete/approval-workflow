@@ -21,6 +21,7 @@ import { DataTablePagination } from "./data-table-pagination";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { useSession, SessionProvider } from "next-auth/react";
+import { RequestStatus } from "~/types";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -33,22 +34,24 @@ interface ActionMenuProps {
   requestId: number;
 }
 
-export function ActionMenu({ approveRequest, rejectRequest, requestId, approverId }: ActionMenuProps & { approverId: number }) {
+export function ActionMenu({ approveRequest, rejectRequest, requestId, approverId, state }: ActionMenuProps & { approverId: number, state: number }) {
   return (
     <SessionProvider>
-      <ActionMenuContent approveRequest={approveRequest} rejectRequest={rejectRequest} requestId={requestId} approverId={approverId} />
+      <ActionMenuContent approveRequest={approveRequest} rejectRequest={rejectRequest} requestId={requestId} approverId={approverId} state={state} />
     </SessionProvider>
   );
 }
 
-function ActionMenuContent({ approveRequest, rejectRequest, requestId, approverId }: ActionMenuProps & { approverId: number }) {
+function ActionMenuContent({ approveRequest, rejectRequest, requestId, approverId, state }: ActionMenuProps & { approverId: number, state: number }) {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
     return <div>Loading...</div>;
   }
 
-  if (Number(session?.user?.id) !== approverId) {
+  const isAuthorized = Number(session?.user?.id) === approverId;
+  const isPending = state === RequestStatus.Pending;
+  if (!isAuthorized || !isPending) {   
     return <div></div>;
   }
 

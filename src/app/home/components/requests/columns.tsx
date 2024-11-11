@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table"
-import { RequestColumn } from "~/types"
+import { RequestColumn, states } from "~/types"
 import { ActionMenu } from "./data-table"
 
 interface GetRequestProps {
@@ -42,6 +42,7 @@ export const GetRequestColumns = ({ approveRequest, rejectRequest }: GetRequestP
     {
       accessorKey: "status",
       header: "Status",
+      cell: ({ row }) => states[row.original.status],
     },
     columnHelper.accessor("actions", {
       header: "Acciones",
@@ -52,6 +53,7 @@ export const GetRequestColumns = ({ approveRequest, rejectRequest }: GetRequestP
             rejectRequest={rejectRequest}
             requestId={row.original.id}
             approverId={row.original.approverId}
+            state={row.original.status}
           />
         )
       },

@@ -46,7 +46,7 @@ export const requestRouter = createTRPCRouter({
       minutes: request.minutes,
       approver: request.approver.name,
       approverId: Number(request.approver.id),
-      status: request.status === RequestStatus.Pending ? 'pending' : request.status === RequestStatus.Approved ? 'approved' : 'rejected',
+      status: request.status,
     })) as Request[];
   }),
   approve: protectedProcedure
@@ -82,7 +82,7 @@ export const requestRouter = createTRPCRouter({
         minutes: request.minutes,
         approver: request.approver.name,
         approverId: Number(request.approver.id),
-        status: 'approved',
+        status: RequestStatus.Approved,
       } as Request;
     }),
 
@@ -119,7 +119,7 @@ export const requestRouter = createTRPCRouter({
         minutes: request.minutes,
         approver: request.approver.name,
         approverId: Number(request.approver.id),
-        status: 'rejected',
+        status: RequestStatus.Rejected,
       } as Request;
     }),
 
