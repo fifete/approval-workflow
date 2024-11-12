@@ -1,29 +1,47 @@
-# Create T3 App
+## Tabla de Contenidos
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+1. [Título y Descripción del Proyecto](#1-título-y-descripción-del-proyecto)
+2. [Características](#2-características)
+3. [Tecnologías Utilizadas](#3-tecnologías-utilizadas)
+4. [Capturas de Pantalla y Demos](#4-capturas-de-pantalla-y-demos)
 
-## What's next? How do I make an app with this?
+## 1. Título y Descripción del Proyecto
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+### Flujo de Aprobación
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+El proyecto está diseñado para gestionar aprobaciones de solicitudes a través de "workflows". Consiste en una lista de tareas que necesitan ser aprobadas o rechazadas. Los supervisores solo pueden aprobar tareas que tengan su nombre en la columna "Aprobador". La lógica de aprobación (workflow) se encuentra definida como una estructura JSON que contiene nodos y aristas, este asegura que solo el supervisor asignado pueda aprobar tareas y verifica si el supervisor está de vacaciones, impidiendo la aprobación hasta que esté activo nuevamente. La lógica del flujo de trabajo puede manejar escenarios más complejos, como múltiples aprobadores secuenciales o validación de IDs de aprobadores al adicionar más nodos a la estructura json.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## 2. Características
 
-## Learn More
+- Aprobar o rechazar solicitudes de los trabajadores definiendo una estructura del flujo de aprobación.
+- Configurar la cantidad de aprobadores necesarios (edición del json en db).
+- Aplicar diferentes validaciones a los aprobadores (edición del json en db).
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## 3. Tecnologías Utilizadas
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- **Next.js**: Un framework de React para la creación de aplicaciones web rápidas y escalables.
+- **Prisma**: Un ORM (Object-Relational Mapping) para Node.js y TypeScript que facilita la interacción con la base de datos.
+- **NextAuth.js**: Una solución de autenticación completa para Next.js.
+- **Tailwind CSS**: Un framework de CSS para crear interfaces de usuario modernas y responsivas.
+- **tRPC**: Una biblioteca para crear APIs de tipo seguro con TypeScript.
+- **React**: Una biblioteca de JavaScript para construir interfaces de usuario.
+- **TypeScript**: Un superconjunto de JavaScript que añade tipos estáticos y otras características avanzadas.
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## 4. Capturas de Pantalla y Demos
 
-## How do I deploy this?
+Primero, inicie sesión con el siguiente usuario supervisor:
+- **Usuario**: John
+- **Contraseña**: password
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Luego verá la lista de solicitudes para aprobar y también la información de la sesión con el botón de cierre de sesión.
+
+![Logout](public/readme/logout.png)
+![Lista de Solicitudes](public/readme/request-list.png)
+
+Puede aprobar o rechazar la solicitud haciendo clic en la columna de acciones.
+
+![Aprobación](public/readme/approval.png)
+
+Una vez que una solicitud ha cambiado su estado, no puede cambiar su estado nuevamente.
+
+![Estado de Aprobación](public/readme/approval-state.png)
