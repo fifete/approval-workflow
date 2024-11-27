@@ -1,6 +1,7 @@
 import { AccessorKeyColumnDef } from "@tanstack/react-table";
 import { ReactNode } from "react";
 
+//todo: move to a separate file
 export enum RequestStatus {
   Pending = 1,
   Approved = 3,
@@ -16,7 +17,7 @@ export const states = {
 export interface Request {
   id: number;
   workerName: string;
-  effectDate: Date;
+  effectDate: string;
   description: string;
   minutes: number;
   approver: string;

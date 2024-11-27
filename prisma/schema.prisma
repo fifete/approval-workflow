@@ -64,8 +64,8 @@ model User {
   sessions      Session[]
   posts         Post[]
   password      String
+  rol           Roles
 
-  Request         Request[] @relation("approverRelation")
   createdRequests Request[] @relation("creatorRelation")
   updatedRequests Request[] @relation("updaterRelation")
 
@@ -73,6 +73,8 @@ model User {
   userLeaderLeader     userLeader[]   @relation("userLeaderLeader")
   userDirectorUser     userDirector[] @relation("userDirectorUser")
   userDirectorDirector userDirector[] @relation("userDirectorDirector")
+  attendances          Attendance[]
+  approverUser        WorkflowRequest[]   @relation("userApprover")
 }
 
 model VerificationToken {
@@ -83,19 +85,16 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-//todo: remove approverId
 model Request {
   id              Int              @id @default(autoincrement())
-  effectDate      DateTime
+  effectDate      String
   description     String
   minutes         Int
-  approverId      String
   status          Int
   createdAt       DateTime         @default(now())
   createdById     String
   updatedAt       DateTime?        @updatedAt
   updatedById     String?
-  approver        User             @relation("approverRelation", fields: [approverId], references: [id])
   creator         User             @relation("creatorRelation", fields: [createdById], references: [id])
   updater         User?            @relation("updaterRelation", fields: [updatedById], references: [id])
   WorkflowRequest WorkflowRequest?
@@ -114,13 +113,16 @@ model Workflow {
 model WorkflowRequest {
   id          Int       @id @default(autoincrement())
   json        Json
+  currentNodeId Int 
   status      Int
   requestId   Int       @unique
+  nextApproverId String
   createdAt   DateTime  @default(now())
   createdById String
   updatedAt   DateTime? @updatedAt
   updatedById String?
   request     Request   @relation(fields: [requestId], references: [id])
+  approver    User      @relation("userApprover", fields: [nextApproverId], references: [id])
 }
 
 model userLeader {
@@ -137,4 +139,18 @@ model userDirector {
   directorId String
   user       User   @relation("userDirectorUser", fields: [userId], references: [id])
   director   User   @relation("userDirectorDirector", fields: [directorId], references: [id])
+}
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  status    Int
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+enum Roles {
+  DIRECTOR
+  LEADER
+  WORKER
 }

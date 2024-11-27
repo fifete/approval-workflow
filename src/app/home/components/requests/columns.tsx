@@ -9,7 +9,10 @@ interface GetRequestProps {
   approveRequest: (id: number) => void
   rejectRequest: (id: number) => void
 }
-const columnHelper = createColumnHelper<Request>()
+const monthNames = [
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+];
 
 export const GetRequestColumns = ({ approveRequest, rejectRequest }: GetRequestProps): ColumnDef<Request>[] => [
     {
@@ -25,7 +28,10 @@ export const GetRequestColumns = ({ approveRequest, rejectRequest }: GetRequestP
       header: "Effect Date",
       cell: ({ row }) => {
         const date = new Date(row.original.effectDate);
-        return date.toISOString().split('T')[0];
+        const day = date.getDate();
+        const month = monthNames[date.getMonth()];
+        const year = date.getFullYear();
+        return `${day} de ${month} del ${year}`;
       },
     },
     {
