@@ -4,6 +4,7 @@ import { rejectRequest } from "~/server/repository/request";
 import { Approve } from "~/server/application/request";
 import { ApproveSchema } from "~/server/zodTypes/request";
 import { Request as RequestMapped } from "~/types";
+import { Roles } from "../constants/enums";
 
 export const requestRouter = createTRPCRouter({
   listAll: protectedProcedure
@@ -15,14 +16,15 @@ export const requestRouter = createTRPCRouter({
       if (!userSession) throw new Error("User not found");
 
       const requests = await ctx.db.request.findMany({
-        // where: {
-        //   OR: [
-        //     ...(userSession.rol.toString() === Roles.DIRECTOR.toString()
-        //       ? [{}] // All requests
-        //       : [{ createdById: userId }]),
-        //   ]
-        //   createdById: '2'
-        // },
+        where: {
+          OR: [
+            ...(userSession.rol === Number(Roles.DIRECTOR.toString()) || userSession.rol === Number(Roles.LEADER.toString())
+              ? [{
+                NOT: { id: 0 },
+              }] // All requests
+              : [{ createdById: userId }]),
+          ]
+        },
         select: {
           id: true,
           effectDate: true,

@@ -26,6 +26,6 @@ export enum RequestStatus {
 }
 
 export enum WorkflowStatus {
-    PROCESS = 1,
+    PROCESSING = 1,
     FINISHED = 2
 }

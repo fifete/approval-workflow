@@ -64,7 +64,7 @@ model User {
   sessions      Session[]
   posts         Post[]
   password      String
-  rol           Roles
+  rol           Int
 
   createdRequests Request[] @relation("creatorRelation")
   updatedRequests Request[] @relation("updaterRelation")
@@ -147,10 +147,4 @@ model Attendance {
   status    Int
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-}
-
-enum Roles {
-  DIRECTOR
-  LEADER
-  WORKER
 }

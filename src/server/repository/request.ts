@@ -1,9 +1,14 @@
 import { RequestStatus } from "~/types";
+import { IUpdateRequest } from "../application/request";
 
-export async function update(ctx: any, input: { requestId: number, approverId: number, newStatus: number }): Promise<void> {
+export async function update(ctx: any, input: IUpdateRequest): Promise<void> {
   await ctx.db.request.update({
-    where: { id: input },
-    data: { status: RequestStatus.Approved },
+    where: { id: input.requestId },
+    data: { 
+      status: RequestStatus.Approved,
+      updatedById: input.approverId.toString(),
+      updatedAt: new Date(),
+    },
     select: {
       id: true,
       effectDate: true,
@@ -13,13 +18,7 @@ export async function update(ctx: any, input: { requestId: number, approverId: n
         select: {
           name: true,
         },
-      },
-      approver: {
-        select: {
-          name: true,
-          id: true,
-        },
-      },
+      }
     },
   });
 }
