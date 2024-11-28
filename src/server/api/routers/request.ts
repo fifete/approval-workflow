@@ -36,10 +36,20 @@ export const requestRouter = createTRPCRouter({
               name: true,
             },
           },
+          updater: {
+            select: {
+              name: true,
+            },
+          },
           WorkflowRequest: {
             select: {
               status: true,
-              nextApproverId: true,
+              approver: {
+                select: {
+                  id: true,
+                  name: true,
+                }
+              }
             },
           },
         },
@@ -52,19 +62,6 @@ export const requestRouter = createTRPCRouter({
         if (!request.WorkflowRequest) {
           throw new Error("Workflow not found");
         }
-        const nextApproverUser = await ctx.db.user.findUnique({
-          where: {
-            id: request.WorkflowRequest.nextApproverId,
-          },
-          select: {
-            id: true,
-            name: true,
-          },
-        })
-
-        if (!nextApproverUser) {
-          throw new Error("Next approver not found");
-        }
 
         const mapped = {
           id: request.id,
@@ -72,8 +69,9 @@ export const requestRouter = createTRPCRouter({
           effectDate: request.effectDate,
           description: request.description,
           minutes: request.minutes,
-          approver: nextApproverUser.name,
-          approverId: Number(nextApproverUser.id),
+          approver: request.WorkflowRequest.approver.name,
+          approverId: Number(request.WorkflowRequest.approver.id),
+          updaterName: request.updater?.name || "",
           status: request.status,
         } as RequestMapped;
 

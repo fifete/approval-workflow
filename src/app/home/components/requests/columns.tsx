@@ -52,6 +52,10 @@ export const GetRequestColumns = ({ approveRequest, rejectRequest }: GetRequestP
       cell: ({ row }) => states[row.original.status],
     },
     {
+      accessorKey: "updaterName",
+      header: "Updater",
+    },
+    {
       accessorKey: "actions",
       header: "Actions",
       cell: ({ row }) => {

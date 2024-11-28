@@ -22,6 +22,7 @@ export interface Request {
   minutes: number;
   approver: string;
   approverId: number;
+  updaterName: string;
   status: number;
   actions: ReactNode;
 }
