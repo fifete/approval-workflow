@@ -4,6 +4,7 @@ import { DataTable } from "./data-table";
 import { api } from "@/trpc/react";
 import { GetRequestColumns } from "./columns";
 import { useCallback } from "react";
+import { DialogDemo } from "../create-dialog";
 
 export default function DemoPage() {
   const { data, refetch } = api.request.listAll.useQuery();
@@ -42,6 +43,9 @@ export default function DemoPage() {
 
   return (
       <div className="container mx-auto py-10">
+        <div className="flex justify-end mb-4">
+          <DialogDemo />
+        </div>
         <DataTable columns={GetRequestColumns({ approveRequest, rejectRequest })} data={data ?? []} />
       </div>
   );
