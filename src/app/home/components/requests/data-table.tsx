@@ -50,8 +50,7 @@ function ActionMenuContent({ approveRequest, rejectRequest, requestId, approverI
   }
 
   const isAuthorized = Number(session?.user?.id) === approverId;
-  const isPending = state === Number(RequestStatus.PENDING);
-  if (!isAuthorized || !isPending) {   
+  if (!isAuthorized) {   
     return <div></div>;
   }
 

@@ -19,6 +19,7 @@ export interface IUpdateRequest {
 }
 
 export async function Approve(ctx: any, input: InferredApproveSchema): Promise<void> {
+    console.log('input ', input);
     const userSession = await getUserSession(ctx, ctx.session.user);
     const request: RequestAndWorkflow = await getRequestById(ctx, input.requestId);
     const requestData: IRequestData = {
