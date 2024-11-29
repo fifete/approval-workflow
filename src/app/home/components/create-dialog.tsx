@@ -14,8 +14,9 @@ import { Input } from "@/app/_components/ui/input"
 import { Label } from "@/app/_components/ui/label"
 import { api } from "~/trpc/react"
 import { useState } from "react";
+import { Roles } from "~/server/api/constants/enums";
 
-export function DialogDemo({ refetchRequests }: { refetchRequests: () => void }) {
+export function DialogDemo({ refetchRequests, userRole }: { refetchRequests: () => void, userRole: Roles.LEADER | Roles.WORKER }) {
   const [description, setDescription] = useState("Establish a new design system");
   const [minutes, setMinutes] = useState(60);
   const [isOpen, setIsOpen] = useState(false);
@@ -39,9 +40,11 @@ export function DialogDemo({ refetchRequests }: { refetchRequests: () => void })
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">Create</Button>
-      </DialogTrigger>
+      {userRole == Roles.WORKER && (
+        <DialogTrigger asChild>
+          <Button variant="outline">Create</Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-[425px]" style={{ backgroundColor: 'white' }}>
         <DialogHeader>
           <DialogTitle>Create Task</DialogTitle>

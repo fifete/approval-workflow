@@ -95,6 +95,16 @@ export const requestRouter = createTRPCRouter({
     return ctx.session.user.id;
   }),
 
+  getSessionUserRole: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    const userSession = await ctx.db.user.findUnique({
+      where: { id: userId },
+    });
+    if (!userSession) throw new Error("User not found");
+
+    return userSession.rol;
+  }),
+
   create: protectedProcedure
   .input(CreateSchema)
   .mutation(async ({ ctx, input }) => {
