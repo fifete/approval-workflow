@@ -44,7 +44,7 @@ export default function DemoPage() {
   return (
       <div className="container mx-auto py-10">
         <div className="flex justify-end mb-4">
-          <DialogDemo />
+          <DialogDemo refetchRequests={refetch} />
         </div>
         <DataTable columns={GetRequestColumns({ approveRequest, rejectRequest })} data={data ?? []} />
       </div>

@@ -1,8 +1,9 @@
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { Approve } from "~/server/application/request";
-import { ApproveSchema } from "~/server/zodTypes/request";
+import { ApproveSchema, CreateSchema } from "~/server/zodTypes/request";
 import { Request as RequestMapped } from "~/types";
-import { Roles } from "../constants/enums";
+import { RequestStatus, Roles } from "../constants/enums";
+import { Workflow } from "@prisma/client";
 
 export const requestRouter = createTRPCRouter({
   listAll: protectedProcedure
@@ -92,5 +93,41 @@ export const requestRouter = createTRPCRouter({
 
   getSessionUserId: protectedProcedure.query(async ({ ctx }) => {
     return ctx.session.user.id;
+  }),
+
+  create: protectedProcedure
+  .input(CreateSchema)
+  .mutation(async ({ ctx, input }) => {
+    const today = new Date();
+    const todayString = today.toISOString().split('T')[0] as string;
+    const request = await ctx.db.request.create({
+      data: {
+        effectDate: todayString,
+        description: input.description,
+        minutes: input.minutes,
+        status: RequestStatus.PENDING,
+        createdById: ctx.session.user.id,
+        updatedAt: null,
+      },
+    });
+
+    const workflow = await ctx.db.workflow.findFirst({
+      where: {
+        id: 1,
+      },
+    }) as Workflow;
+
+    await ctx.db.workflowRequest.create({
+      data: {
+        json: workflow.json ?? {},
+        currentNodeId: 1,
+        status: RequestStatus.PENDING,
+        requestId: request.id,
+        nextApproverId: "1",
+        createdById: ctx.session.user.id,
+      },
+    });
+
+    return request;
   }),
 });

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/app/_components/ui/button"
 import {
   Dialog,
@@ -10,14 +12,33 @@ import {
 } from "@/app/_components/ui/dialog"
 import { Input } from "@/app/_components/ui/input"
 import { Label } from "@/app/_components/ui/label"
+import { api } from "~/trpc/react"
+import { useState } from "react";
 
-function onCreate() {
-    console.log('Create task')
-}
+export function DialogDemo({ refetchRequests }: { refetchRequests: () => void }) {
+  const [description, setDescription] = useState("Establish a new design system");
+  const [minutes, setMinutes] = useState(60);
+  const [isOpen, setIsOpen] = useState(false);
+  const createMutation = api.request.create.useMutation();
 
-export function DialogDemo() {
+  const onCreate = () => {
+    createMutation.mutate({
+      description,
+      minutes
+    }, {
+      onSuccess: () => {
+        setIsOpen(false);
+        refetchRequests();
+        console.log('Task created');
+      },
+      onError: (e) => {
+        console.log('error ', e);
+      },
+    });
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Create</Button>
       </DialogTrigger>
@@ -32,7 +53,8 @@ export function DialogDemo() {
             </Label>
             <Input
               id="description"
-              defaultValue="Establish a new design system"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               className="col-span-3"
             />
           </div>
@@ -42,15 +64,16 @@ export function DialogDemo() {
             </Label>
             <Input
               id="minutes"
-              defaultValue="60"
+              value={minutes}
+              onChange={(e) => setMinutes(Number(e.target.value))}
               className="col-span-3"
             />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={() => onCreate()}>Save changes</Button>
+          <Button type="submit" onClick={onCreate}>Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
