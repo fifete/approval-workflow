@@ -9,13 +9,18 @@
 
 ### Flujo de Aprobación
 
-El proyecto está diseñado para gestionar aprobaciones de solicitudes a través de "workflows". Consiste en una lista de tareas que necesitan ser aprobadas o rechazadas. Los supervisores solo pueden aprobar tareas que tengan su nombre en la columna "Aprobador". La lógica de aprobación (workflow) se encuentra definida como una estructura JSON que contiene nodos y aristas, este asegura que solo el supervisor asignado pueda aprobar tareas y verifica si el supervisor está de vacaciones, impidiendo la aprobación hasta que esté activo nuevamente. La lógica del flujo de trabajo puede manejar escenarios más complejos, como múltiples aprobadores secuenciales o validación de IDs de aprobadores al adicionar más nodos a la estructura json.
+El proyecto está diseñado para gestionar aprobaciones de solicitudes a través de "workflows". Consiste en una lista de tareas que necesitan ser aprobadas o rechazadas. Los supervisores solo pueden aprobar tareas que tengan su nombre en la columna "Aprobador". La lógica de aprobación (workflow) se encuentra definida como una estructura JSON que contiene nodos y aristas, este asegura que solo el supervisor asignado pueda aprobar tareas.
+
+El flujo de trabajo utilizado verifica la duración (en minutos) de la tarea, si la tarea dura más de 300 minutos la aprobación será secuencial (líder seguido de director), de lo contrario solo la aprobación del líder será requerida. La lógica del flujo de trabajo puede manejar escenarios más complejos, como múltiples aprobadores secuenciales o validación de IDs de aprobadores al adicionar más nodos a la estructura json.
+
+![Workflow de Aprobación](public/readme/Workflow.png)
 
 ## 2. Características
 
 - Aprobar o rechazar solicitudes de los trabajadores definiendo una estructura del flujo de aprobación.
-- Configurar la cantidad de aprobadores necesarios (edición del json en db).
-- Aplicar diferentes validaciones a los aprobadores (edición del json en db).
+- Existen tres roles: Trabajador, Líder y Director
+- Solo el rol "Trabajador" puede crear tareas que según la duración de la tarea serán aprobadas por los respectivos roles
+- Una vez que la solicitud haya llegado a un estado final como "Approved" o "Rejected, no se podrá realizar acción alguna sobre la tarea debido al termino de su flujo.
 
 ## 3. Tecnologías Utilizadas
 
@@ -29,19 +34,10 @@ El proyecto está diseñado para gestionar aprobaciones de solicitudes a través
 
 ## 4. Capturas de Pantalla y Demos
 
-Primero, inicie sesión con el siguiente usuario supervisor:
-- **Usuario**: John
-- **Contraseña**: password
+| userName | contraseña | rol           |
+|----------|------------|---------------|
+| Rachel   | hello      | Líder         |
+| John     | hello      | Trabajaddor   |
+| Jamie    | hello      | Director      |
 
-Luego verá la lista de solicitudes para aprobar y también la información de la sesión con el botón de cierre de sesión.
 
-![Logout](public/readme/logout.png)
-![Lista de Solicitudes](public/readme/request-list.png)
-
-Puede aprobar o rechazar la solicitud haciendo clic en la columna de acciones.
-
-![Aprobación](public/readme/approval.png)
-
-Una vez que una solicitud ha cambiado su estado, no puede cambiar su estado nuevamente.
-
-![Estado de Aprobación](public/readme/approval-state.png)
