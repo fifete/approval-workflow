@@ -21,7 +21,7 @@ import { DataTablePagination } from "./data-table-pagination";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { useSession, SessionProvider } from "next-auth/react";
-import { RequestStatus } from "~/types";
+import { RequestStatus } from "~/server/api/constants/enums";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -50,7 +50,7 @@ function ActionMenuContent({ approveRequest, rejectRequest, requestId, approverI
   }
 
   const isAuthorized = Number(session?.user?.id) === approverId;
-  const isPending = state === Number(RequestStatus.Pending);
+  const isPending = state === Number(RequestStatus.PENDING);
   if (!isAuthorized || !isPending) {   
     return <div></div>;
   }

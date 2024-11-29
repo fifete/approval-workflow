@@ -1,17 +1,11 @@
-import { AccessorKeyColumnDef } from "@tanstack/react-table";
 import { ReactNode } from "react";
-
-//todo: move to a separate file
-export enum RequestStatus {
-  Pending = 1,
-  Approved = 3,
-  Rejected = 2,
-}
+import { RequestStatus } from "./server/api/constants/enums";
 
 export const states = {
-  [Number(RequestStatus.Pending)]: "Pending",
-  [Number(RequestStatus.Approved)]: "Approved",
-  [Number(RequestStatus.Rejected)]: "Rejected",
+  [Number(RequestStatus.PENDING)]: "Pending",
+  [Number(RequestStatus.APPROVED)]: "Approved",
+  [Number(RequestStatus.REJECTED)]: "Rejected",
+  [Number(RequestStatus.PENDINGBYDIRECTOR)]: "Pending by director",
 }
 
 export interface Request {

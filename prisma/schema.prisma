@@ -116,13 +116,13 @@ model WorkflowRequest {
   currentNodeId Int 
   status      Int
   requestId   Int       @unique
-  nextApproverId String
+  nextApproverId String?
   createdAt   DateTime  @default(now())
   createdById String
   updatedAt   DateTime? @updatedAt
   updatedById String?
   request     Request   @relation(fields: [requestId], references: [id])
-  approver    User      @relation("userApprover", fields: [nextApproverId], references: [id])
+  approver    User?      @relation("userApprover", fields: [nextApproverId], references: [id])
 }
 
 model userLeader {

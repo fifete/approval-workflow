@@ -1,6 +1,4 @@
-import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { rejectRequest } from "~/server/repository/request";
 import { Approve } from "~/server/application/request";
 import { ApproveSchema } from "~/server/zodTypes/request";
 import { Request as RequestMapped } from "~/types";
@@ -69,8 +67,8 @@ export const requestRouter = createTRPCRouter({
           effectDate: request.effectDate,
           description: request.description,
           minutes: request.minutes,
-          approver: request.WorkflowRequest.approver.name,
-          approverId: Number(request.WorkflowRequest.approver.id),
+          approver: request.WorkflowRequest.approver?.name || "-",
+          approverId: Number(request.WorkflowRequest.approver?.id || 0),
           updaterName: request.updater?.name || "",
           status: request.status,
         } as RequestMapped;
@@ -87,9 +85,9 @@ export const requestRouter = createTRPCRouter({
     }),
 
   reject: protectedProcedure
-    .input(z.number())
+    .input(ApproveSchema)
     .mutation(async ({ ctx, input }) => {
-      return await rejectRequest(ctx, input);
+      return await Approve(ctx, input);
     }),
 
   getSessionUserId: protectedProcedure.query(async ({ ctx }) => {

@@ -26,7 +26,10 @@ export default function DemoPage() {
     , [approveMutation, refetch]);
 
   const rejectRequest = useCallback((id: number) => {
-    rejectMutation.mutate(id, {
+    rejectMutation.mutate({
+      requestId: id,
+      isApproving: false
+    }, {
       onSuccess: () => {
         refetch();
       },

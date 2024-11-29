@@ -1,8 +1,7 @@
 import { InferredApproveSchema } from "../zodTypes/request";
 import { update } from "../repository/request";
-import { NodeTypes, WorkflowStatus } from "../api/constants/enums";
+import { NodeTypes, RequestStatus, WorkflowStatus } from "../api/constants/enums";
 import type { Request, User, WorkflowRequest } from '@prisma/client';
-import { RequestStatus } from "~/types";
 
 interface IRequestData {
     requestId: number;
@@ -31,7 +30,8 @@ export async function Approve(ctx: any, input: InferredApproveSchema): Promise<v
     }
 
     const { state, currentNodeId } = await GetNextStatus(ctx, requestData);
-    const isTerminated = state === RequestStatus.Rejected || state === RequestStatus.Approved;
+    console.log('state ', state);
+    const isTerminated = state === RequestStatus.REJECTED || state === RequestStatus.APPROVED;
 
     let nextApproverId = 0;
     if (!isTerminated) {
@@ -42,8 +42,6 @@ export async function Approve(ctx: any, input: InferredApproveSchema): Promise<v
         });
     }
     
-    console.log('nextApproverId ', nextApproverId);
-
     await updateWorkflowStatus(ctx, {
         requestId: input.requestId,
         status: isTerminated ? WorkflowStatus.FINISHED : WorkflowStatus.PROCESSING,
@@ -78,7 +76,7 @@ async function GetNextStatus(ctx: any, input: IRequestData): Promise<{ currentNo
     }
     const nodes = wf.nodes;
     let currentNode: Node = await getNodeFromWf(requestWorkflow.currentNodeId, nodes);
-    let state = RequestStatus.Pending;
+    let state = RequestStatus.PENDING;
     let passesThroughApprover = 0;
 
     while (currentNode) {
@@ -121,6 +119,7 @@ async function GetNextStatus(ctx: any, input: IRequestData): Promise<{ currentNo
                 break;
 
             case NodeTypes.STATE:
+                console.log('state ', currentNode.data.values[0]);
                 state = currentNode.data.values[0] as number;
                 currentNode = getNextNode(currentNode.id, wf, undefined);
                 break;
@@ -177,6 +176,8 @@ function getNextNode(currentNodeId: number, wf: Graph, path?: boolean): Node {
     const edges: Edge[] = wf.edges.filter(edge => edge.source === currentNodeId);
     if (edges.length === 0) throw new Error("Edge not found");
 
+    console.log('currentNodeId ', currentNodeId);
+
     if (typeof path === "boolean") {
         const edge = edges.find(edge => edge.path === path);
         if (!edge) throw new Error("Edge not found");
@@ -188,12 +189,11 @@ function getNextNode(currentNodeId: number, wf: Graph, path?: boolean): Node {
 }
 
 async function updateWorkflowStatus(ctx: any, { requestId, status, nextApproverId, currentNodeId, userSessionId }: { requestId: number, status: WorkflowStatus, nextApproverId: number, currentNodeId: number, userSessionId: string }): Promise<void> {
-    console.log('updateWorkflowStatus ', requestId, status, nextApproverId);
     await ctx.db.workflowRequest.update({
         where: { requestId },
         data: { 
             status,
-            nextApproverId: nextApproverId.toString(),
+            nextApproverId: status === WorkflowStatus.PROCESSING ? nextApproverId.toString() : null,
             updatedById: userSessionId,
             updatedAt: new Date(),
             currentNodeId,
