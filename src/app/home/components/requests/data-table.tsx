@@ -22,6 +22,8 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { MoreHorizontal } from "lucide-react";
 import { useSession, SessionProvider } from "next-auth/react";
 import { RequestStatus } from "~/server/api/constants/enums";
+import { useEffect, useState } from "react";
+import { Session } from "next-auth";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -45,11 +47,23 @@ export function ActionMenu({ approveRequest, rejectRequest, requestId, approverI
 function ActionMenuContent({ approveRequest, rejectRequest, requestId, approverId, state }: ActionMenuProps & { approverId: number, state: number }) {
   const { data: session, status } = useSession();
 
-  if (status === "loading") {
+  
+  const [delayedSession, setDelayedSession] = useState<Session | null>(null);
+  const [delayedStatus, setDelayedStatus] = useState("loading");
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      setDelayedSession(session);
+      setDelayedStatus(status);
+    }, 1000); // Simulate delay
+    return () => clearTimeout(delay);
+  }, [session, status]);
+
+  if (delayedStatus === "loading" || !delayedSession) {
     return <div>Loading...</div>;
   }
 
-  const isAuthorized = Number(session?.user?.id) === approverId;
+  const isAuthorized = Number(delayedSession?.user?.id) === approverId;
   if (!isAuthorized) {   
     return <div></div>;
   }
