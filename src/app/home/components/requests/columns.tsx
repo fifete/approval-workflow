@@ -8,13 +8,14 @@ import { Request } from "~/types";
 interface GetRequestProps {
   approveRequest: (id: number) => void
   rejectRequest: (id: number) => void
+  session: any
 }
 const monthNames = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 ];
 
-export const GetRequestColumns = ({ approveRequest, rejectRequest }: GetRequestProps): ColumnDef<Request>[] => [
+export const GetRequestColumns = ({ approveRequest, rejectRequest, session }: GetRequestProps): ColumnDef<Request>[] => [
     {
       accessorKey: "id",
       header: "ID",
@@ -66,6 +67,7 @@ export const GetRequestColumns = ({ approveRequest, rejectRequest }: GetRequestP
             requestId={row.original.id}
             approverId={row.original.approverId}
             state={row.original.status}
+            session={session}
           />
         )
       },

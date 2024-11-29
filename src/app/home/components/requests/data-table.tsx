@@ -36,34 +36,33 @@ interface ActionMenuProps {
   requestId: number;
 }
 
-export function ActionMenu({ approveRequest, rejectRequest, requestId, approverId, state }: ActionMenuProps & { approverId: number, state: number }) {
+interface ServerSession {
+  role: number;
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    status: string;
+}
+
+export function ActionMenu({ approveRequest, rejectRequest, requestId, approverId, state, session }: ActionMenuProps & { approverId: number, state: number, session: ServerSession }) {
   return (
-    <SessionProvider>
-      <ActionMenuContent approveRequest={approveRequest} rejectRequest={rejectRequest} requestId={requestId} approverId={approverId} state={state} />
-    </SessionProvider>
+    // <SessionProvider>
+      <ActionMenuContent approveRequest={approveRequest} rejectRequest={rejectRequest} requestId={requestId} approverId={approverId} state={state} session={session}/>
+    //</SessionProvider>
   );
 }
 
-function ActionMenuContent({ approveRequest, rejectRequest, requestId, approverId, state }: ActionMenuProps & { approverId: number, state: number }) {
-  const { data: session, status } = useSession();
+function ActionMenuContent({ approveRequest, rejectRequest, requestId, approverId, state, session }: ActionMenuProps & { approverId: number, state: number, session: ServerSession }) {
+  console.log('session FRONt ', session);
+  console.log('session FRONt 1', session?.id);
+  console.log('session FRONt 2', approverId);
+  // const { data: session, status } = useSession();
+  // if (session.status === "loading") {
+  //   return <div>Loading...</div>;
+  // }
 
-  
-  const [delayedSession, setDelayedSession] = useState<Session | null>(null);
-  const [delayedStatus, setDelayedStatus] = useState("loading");
-
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      setDelayedSession(session);
-      setDelayedStatus(status);
-    }, 1000); // Simulate delay
-    return () => clearTimeout(delay);
-  }, [session, status]);
-
-  if (delayedStatus === "loading" || !delayedSession) {
-    return <div>Loading...</div>;
-  }
-
-  const isAuthorized = Number(delayedSession?.user?.id) === approverId;
+  const isAuthorized = Number(session?.id) === approverId;
   if (!isAuthorized) {   
     return <div></div>;
   }

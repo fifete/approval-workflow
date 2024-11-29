@@ -12,8 +12,10 @@ export default function DemoPage() {
   const { data, refetch } = api.request.listAll.useQuery();
   const approveMutation = api.request.approve.useMutation()
   const rejectMutation = api.request.reject.useMutation()
-  const { data: sessionData } = api.request.getSessionUserRole.useQuery();
-  const userRole = sessionData == Number(Roles.WORKER.toString()) ? Roles.WORKER : Roles.LEADER;
+  const sessionRaw = api.request.getSessionUserRole.useQuery();
+  const session = sessionRaw.data;
+  console.log('session FRONT', session);
+  const userRole = session?.role == Number(Roles.WORKER.toString()) ? Roles.WORKER : Roles.LEADER;
 
   const approveRequest = useCallback((id: number) => {
     approveMutation.mutate({
@@ -50,7 +52,7 @@ export default function DemoPage() {
         <div className="flex justify-end mb-4">
           <DialogDemo refetchRequests={refetch} userRole={userRole} />
         </div>
-        <DataTable columns={GetRequestColumns({ approveRequest, rejectRequest })} data={data ?? []} />
+        <DataTable columns={GetRequestColumns({ approveRequest, rejectRequest, session })} data={data ?? []} />
       </div>
   );
 }

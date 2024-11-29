@@ -102,7 +102,14 @@ export const requestRouter = createTRPCRouter({
     });
     if (!userSession) throw new Error("User not found");
 
-    return userSession.rol;
+    const mapped = {
+      ...ctx.session.user,
+      role: userSession.rol,
+    }
+
+    console.log('mapped ', mapped);
+
+    return mapped;
   }),
 
   create: protectedProcedure

@@ -11,6 +11,8 @@
 
 El proyecto está diseñado para gestionar aprobaciones de solicitudes a través de "workflows". Consiste en una lista de tareas que necesitan ser aprobadas o rechazadas. Los supervisores solo pueden aprobar tareas que tengan su nombre en la columna "Aprobador". La lógica de aprobación (workflow) se encuentra definida como una estructura JSON que contiene nodos y aristas, este asegura que solo el supervisor asignado pueda aprobar tareas.
 
+![Listado de Tareas](public/readme/task-list.png)
+
 El flujo de trabajo utilizado verifica la duración (en minutos) de la tarea, si la tarea dura más de 300 minutos la aprobación será secuencial (líder seguido de director), de lo contrario solo la aprobación del líder será requerida. La lógica del flujo de trabajo puede manejar escenarios más complejos, como múltiples aprobadores secuenciales o validación de IDs de aprobadores al adicionar más nodos a la estructura json.
 
 ![Workflow de Aprobación](public/readme/Workflow.png)
@@ -41,20 +43,15 @@ El flujo de trabajo utilizado verifica la duración (en minutos) de la tarea, si
 | Jamie    | hello      | Director      |
 
 Entraremos con el usuario John que tiene el rol de "Trabajador" para crear tareas a ser aprobadas.
-<video width="320" height="240" controls>
-  <source src="public/readme/role-worker.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[Usando el rol de Trabajador](public/readme/role-worker.mp4)
 
 Ingresamos con el rol de "Líder" para aprobar las tareas tal como se muestra en la columna de "Approver":
 Solo la tarea que tiene 400 minutos (mayor a los 300 minutos especificados en el workflow) requerirá una doble aprobación de líder seguido de director
-<video width="320" height="240" controls>
-  <source src="public/readme/role-leader.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
+[Usando el rol de Líder](public/readme/role-leader.mp4)
+
 
 Ingresamos con el rol de "Director" para aprobar las tareas (> 400 minutos) tal como se muestra en la columna de "Approver":
-<video width="320" height="240" controls>
-  <source src="public/readme/role-director.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
+[Usando el rol de Director](public/readme/role-director.mp4)
+
