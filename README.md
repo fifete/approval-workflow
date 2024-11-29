@@ -40,4 +40,21 @@ El flujo de trabajo utilizado verifica la duración (en minutos) de la tarea, si
 | John     | hello      | Trabajaddor   |
 | Jamie    | hello      | Director      |
 
+Entraremos con el usuario John que tiene el rol de "Trabajador" para crear tareas a ser aprobadas.
+<video width="320" height="240" controls>
+  <source src="public/readme/role-worker.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
+Ingresamos con el rol de "Líder" para aprobar las tareas tal como se muestra en la columna de "Approver":
+Solo la tarea que tiene 400 minutos (mayor a los 300 minutos especificados en el workflow) requerirá una doble aprobación de líder seguido de director
+<video width="320" height="240" controls>
+  <source src="public/readme/role-leader.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+Ingresamos con el rol de "Director" para aprobar las tareas (> 400 minutos) tal como se muestra en la columna de "Approver":
+<video width="320" height="240" controls>
+  <source src="public/readme/role-director.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
